@@ -24,34 +24,46 @@ public class PessoaServiceImpl implements PessoaService {
 	ContatoRepository contatoRepository;
 
 
-	public void salvar(PessoaDTO pessoa) {
-	    Pessoa novaPessoa = new Pessoa();
-	    novaPessoa.setNome(pessoa.getNome());
-	    novaPessoa.setIdade(pessoa.getIdade());
-	    novaPessoa.setCpf(pessoa.getCpf());
+	@Service
+	public class PessoaService {
 
-	    Endereco enderecoPessoa = new Endereco();
-	    enderecoPessoa.setEndereco(pessoa.getEndereco().getEndereco());
-	    enderecoPessoa.setCep(pessoa.getEndereco().getCep());
-	    enderecoPessoa.setCidade(pessoa.getEndereco().getCidade());
-	    enderecoPessoa.setUf(pessoa.getEndereco().getUf());
-	    novaPessoa.setEndereco(enderecoPessoa);
+	    @Autowired
+	    private PessoaRepository pessoaRepository;
 
-	    novaPessoa = repository.save(novaPessoa);
+	    @Autowired
+	    private ContatoRepository contatoRepository;
 
-	    List<ContatoDTO> listaDTO = pessoa.getContatos();
-	    List<Contato> novaListaContato = new ArrayList<>();
+	    public void salvar(PessoaDTO pessoa) {
+	        Pessoa novaPessoa = new Pessoa();
+	        novaPessoa.setNome(pessoa.getNome());
+	        novaPessoa.setIdade(pessoa.getIdade());
+	        novaPessoa.setCpf(pessoa.getCpf());
 
-	    for (ContatoDTO contato : listaDTO) {
-	        Contato novoContato = new Contato();
-	        novoContato.setContato(contato.getContato());
-	        novoContato.setTipoContato(contato.getTipoContato());
-	        novoContato.setPessoa(novaPessoa);
-	        novaListaContato.add(novoContato);
+	        Endereco enderecoPessoa = new Endereco();
+	        enderecoPessoa.setEndereco(pessoa.getEndereco().getEndereco());
+	        enderecoPessoa.setCep(pessoa.getEndereco().getCep());
+	        enderecoPessoa.setCidade(pessoa.getEndereco().getCidade());
+	        enderecoPessoa.setUf(pessoa.getEndereco().getUf());
+	        novaPessoa.setEndereco(enderecoPessoa);
+
+	        List<ContatoDTO> listaDTO = pessoa.getContatos();
+	        List<Contato> novaListaContato = new ArrayList<>();
+
+	        for (ContatoDTO contato : listaDTO) {
+	            Contato novoContato = new Contato();
+	            novoContato.setContato(contato.getContato());
+	            novoContato.setTipoContato(contato.getTipoContato());
+	            novoContato.setPessoa(novaPessoa); 
+	            novaListaContato.add(novoContato);
+	        }
+
+	        novaPessoa.setContatos(novaListaContato);
+
+	        pessoaRepository.save(novaPessoa);
+	        contatoRepository.saveAll(novaListaContato);
 	    }
-
-	    contatoRepository.saveAll(novaListaContato);
 	}
+
 
 
 	@Override
@@ -73,26 +85,36 @@ public class PessoaServiceImpl implements PessoaService {
 	}
 
 	@Override
-	public void atualizar(Long id, PessoaDTO pessoa) throws Exception {
-		Optional<Pessoa> pessoaModelo = repository.findById(id);
-		if(pessoaModelo.isEmpty()) {
-			throw new Exception("Usuário não encontrado");
-		}
-		Pessoa novaPessoa = pessoaModelo.get();
+	public void salvar(PessoaDTO pessoa) {
 		
-		novaPessoa.setNome(pessoa.getNome());
-		novaPessoa.setIdade(pessoa.getIdade());
-		novaPessoa.setCpf(pessoa.getCpf());
-		Endereco enderecoPessoa = new Endereco();
-		enderecoPessoa.setEndereco(pessoa.getEndereco().getEndereco());
-		enderecoPessoa.setCep(pessoa.getEndereco().getCep());
-		enderecoPessoa.setCidade(pessoa.getEndereco().getCidade());
-		enderecoPessoa.setUf(pessoa.getEndereco().getUf());
-		novaPessoa.setEndereco(enderecoPessoa);
+	    Pessoa novaPessoa = new Pessoa();
+	    novaPessoa.setNome(pessoa.getNome());
+	    novaPessoa.setIdade(pessoa.getIdade());
+	    novaPessoa.setCpf(pessoa.getCpf());
 
-		repository.save(novaPessoa);
-		
+	    Endereco enderecoPessoa = new Endereco();
+	    enderecoPessoa.setEndereco(pessoa.getEndereco().getEndereco());
+	    enderecoPessoa.setCep(pessoa.getEndereco().getCep());
+	    enderecoPessoa.setCidade(pessoa.getEndereco().getCidade());
+	    enderecoPessoa.setUf(pessoa.getEndereco().getUf());
+	    novaPessoa.setEndereco(enderecoPessoa);
+	    
+	    List<ContatoDTO> listaDTO = pessoa.getContatos();
+	    List<Contato> novaListaContato = new ArrayList<>();
+
+	    for (ContatoDTO contato : listaDTO) {
+	        Contato novoContato = new Contato();
+	        novoContato.setContato(contato.getContato());
+	        novoContato.setTipoContato(contato.getTipoContato());
+	        novoContato.setPessoa(novaPessoa); 
+	        novaListaContato.add(novoContato);
+	    }
+
+	    novaPessoa.setContatos(novaListaContato);
+
+	    repository.save(novaPessoa);
 	}
+
 
 	@Override
 	public void apagar(Long id) throws Exception {
@@ -103,5 +125,12 @@ public class PessoaServiceImpl implements PessoaService {
 		Pessoa pessoa = pessoaModelo.get();
 		pessoa.setSituacao(0);
 		repository.save(pessoa);
+	}
+
+
+	@Override
+	public void atualizar(Long id, PessoaDTO pessoa) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 }

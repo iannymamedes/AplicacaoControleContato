@@ -49,9 +49,7 @@ public class ContatoResource {
 	@Autowired
 	ContatoService contatoService;
 
-	@GetMapping
-	@ApiOperation("Lista todos os contatos salvos")
-	 
+	@GetMapping	 
 	public ResponseEntity<List<ContatoDTO>> listarContatos() {
 		List<ContatoDTO> contatos = contatoService.buscarTodos();
 		if (contatos == null) {
@@ -61,7 +59,6 @@ public class ContatoResource {
 	}
 
 	@GetMapping("/{id}")
-	@ApiOperation("Recupera um contato buscando pelo id")
 	public ResponseEntity<ContatoDTO> buscarPorId(@PathVariable Long id) throws Exception {
 		try {
 			ContatoDTO contato = contatoService.buscarPorId(id);
