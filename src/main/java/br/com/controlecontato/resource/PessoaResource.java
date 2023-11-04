@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,13 +14,29 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import br.com.controlecontato.dto.PessoaDTO;
 import br.com.controlecontato.model.Pessoa;
 import br.com.controlecontato.service.PessoaService;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/pessoa")
+@Tag(name = "API Pessoas", description = "Aplicação completa com a possibilidade de busca por id, obter a lista de todos as pessoas, criar registro, apagar registro e atualizar registro de pessoas")
+
+@ApiResponses(value = {
+		  
+		  @ApiResponse(responseCode = "200", description = "Ação bem-sucedida",
+		  content = {
+		  
+		  @Content(mediaType = "application/json", schema = @Schema(implementation =
+		  PessoaDTO.class)) }),
+		  
+		  @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+		  })
 public class PessoaResource {
 	@Autowired
 	PessoaService pessoaService;
@@ -66,6 +81,7 @@ public class PessoaResource {
 			throw new Exception(e.getMessage());
 		}
 	}
+	
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deletar(@PathVariable Long id) throws Exception{
