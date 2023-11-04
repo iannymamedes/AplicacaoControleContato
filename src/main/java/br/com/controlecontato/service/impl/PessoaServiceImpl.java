@@ -25,13 +25,11 @@ public class PessoaServiceImpl implements PessoaService {
 
 
 	public void salvar(PessoaDTO pessoa) {
-	    // Crie uma nova pessoa e configure seus dados
 	    Pessoa novaPessoa = new Pessoa();
 	    novaPessoa.setNome(pessoa.getNome());
 	    novaPessoa.setIdade(pessoa.getIdade());
 	    novaPessoa.setCpf(pessoa.getCpf());
 
-	    // Crie um novo endereço e configure seus dados
 	    Endereco enderecoPessoa = new Endereco();
 	    enderecoPessoa.setEndereco(pessoa.getEndereco().getEndereco());
 	    enderecoPessoa.setCep(pessoa.getEndereco().getCep());
@@ -39,22 +37,19 @@ public class PessoaServiceImpl implements PessoaService {
 	    enderecoPessoa.setUf(pessoa.getEndereco().getUf());
 	    novaPessoa.setEndereco(enderecoPessoa);
 
-	    // Salve a nova pessoa no banco de dados
 	    novaPessoa = repository.save(novaPessoa);
 
 	    List<ContatoDTO> listaDTO = pessoa.getContatos();
 	    List<Contato> novaListaContato = new ArrayList<>();
 
-	    // Crie novos contatos e configure seus dados
 	    for (ContatoDTO contato : listaDTO) {
 	        Contato novoContato = new Contato();
 	        novoContato.setContato(contato.getContato());
 	        novoContato.setTipoContato(contato.getTipoContato());
-	        novoContato.setPessoa(novaPessoa); // Associe o contato à nova pessoa
+	        novoContato.setPessoa(novaPessoa);
 	        novaListaContato.add(novoContato);
 	    }
 
-	    // Salve a nova lista de contatos no banco de dados
 	    contatoRepository.saveAll(novaListaContato);
 	}
 
