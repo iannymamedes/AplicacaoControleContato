@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="tb_endereco")
+@Table(name = "tb_endereco")
 public class Endereco {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,12 +18,10 @@ public class Endereco {
 	private String cep;
 	private String cidade;
 	private String uf;
-	
-	
+
 	public Endereco() {
 		super();
 	}
-
 
 	public Endereco(Long id, String endereco, String cep, String cidade, String uf) {
 		super();
@@ -92,5 +90,5 @@ public class Endereco {
 				&& Objects.equals(endereco, other.endereco) && Objects.equals(id, other.id)
 				&& Objects.equals(uf, other.uf);
 	}
-	
+
 }

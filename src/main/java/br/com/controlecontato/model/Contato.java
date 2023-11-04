@@ -18,21 +18,22 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "tb_contato")
 public class Contato {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Enumerated(EnumType.ORDINAL)
-    private TipoContato tipoContato;
-    private String contato;
-       
-    @ManyToOne
-    @JoinColumn(name = "pessoa_id")
-    private Pessoa pessoa;
-    
-    //Construtores
-    public Contato() {}
-       
-    public Contato(Long id, TipoContato tipoContato, String contato, Pessoa pessoa) {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Enumerated(EnumType.ORDINAL)
+	private TipoContato tipoContato;
+	private String contato;
+
+	@ManyToOne
+	@JoinColumn(name = "pessoa_id")
+	private Pessoa pessoa;
+
+	// Construtores
+	public Contato() {
+	}
+
+	public Contato(Long id, TipoContato tipoContato, String contato, Pessoa pessoa) {
 		super();
 		this.id = id;
 		this.tipoContato = tipoContato;
@@ -40,13 +41,13 @@ public class Contato {
 		this.pessoa = pessoa;
 	}
 
+	private Integer situacao;
 
-    private Integer situacao;
 	@PrePersist
 	private void prePersist() {
 		setSituacao(1);
 	}
-	
+
 	public Integer getSituacao() {
 		return situacao;
 	}
@@ -55,7 +56,7 @@ public class Contato {
 		this.situacao = situacao;
 	}
 
-	//Getters e Setters
+	// Getters e Setters
 	public Long getId() {
 		return id;
 	}
@@ -63,8 +64,6 @@ public class Contato {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	
 
 	public TipoContato getTipoContato() {
 		return tipoContato;
@@ -89,8 +88,8 @@ public class Contato {
 	public void setPessoa(Pessoa pessoa) {
 		this.pessoa = pessoa;
 	}
-	
-	//HashCode e Equals
+
+	// HashCode e Equals
 	@Override
 	public int hashCode() {
 		return Objects.hash(contato, id, pessoa, tipoContato);
@@ -108,14 +107,13 @@ public class Contato {
 		return Objects.equals(contato, other.contato) && Objects.equals(id, other.id)
 				&& Objects.equals(pessoa, other.pessoa) && tipoContato == other.tipoContato;
 	}
-	
+
 	public static ContatoDTO fromEntity(Contato contato) {
 		ContatoDTO contatoDTO = new ContatoDTO();
 		contatoDTO.setTipoContato(contato.getTipoContato());
 		contatoDTO.setContato(contato.getContato());
-		
+
 		return contatoDTO;
 	}
-    
-}
 
+}

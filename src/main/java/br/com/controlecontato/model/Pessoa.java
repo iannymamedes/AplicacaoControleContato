@@ -24,14 +24,15 @@ public class Pessoa {
 	private String nome;
 	private String cpf;
 	private Integer idade;
-	@JoinColumn(name="endereco_id")
+	@JoinColumn(name = "endereco_id")
 	@OneToOne(cascade = CascadeType.PERSIST)
 	private Endereco endereco;
 
 	@OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
 	private List<Contato> contatos;
-	
+
 	private Integer situacao;
+
 	@PrePersist
 	private void prePersist() {
 		setSituacao(1);
@@ -54,8 +55,6 @@ public class Pessoa {
 	public Pessoa() {
 		super();
 	}
-	
-	
 
 	public Endereco getEndereco() {
 		return endereco;

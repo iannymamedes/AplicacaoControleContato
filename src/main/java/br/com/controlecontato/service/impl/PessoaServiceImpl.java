@@ -24,47 +24,43 @@ public class PessoaServiceImpl implements PessoaService {
 	@Autowired
 	ContatoRepository contatoRepository;
 
-
 	public void salvar(PessoaDTO pessoa) {
 		Pessoa novaPessoa = new Pessoa();
-	    novaPessoa.setNome(pessoa.getNome());
-	    novaPessoa.setIdade(pessoa.getIdade());
-	    novaPessoa.setCpf(pessoa.getCpf());
+		novaPessoa.setNome(pessoa.getNome());
+		novaPessoa.setIdade(pessoa.getIdade());
+		novaPessoa.setCpf(pessoa.getCpf());
 
-	    Endereco enderecoPessoa = new Endereco();
-	    enderecoPessoa.setEndereco(pessoa.getEndereco().getEndereco());
-	    enderecoPessoa.setCep(pessoa.getEndereco().getCep());
-	    enderecoPessoa.setCidade(pessoa.getEndereco().getCidade());
-	    enderecoPessoa.setUf(pessoa.getEndereco().getUf());
+		Endereco enderecoPessoa = new Endereco();
+		enderecoPessoa.setEndereco(pessoa.getEndereco().getEndereco());
+		enderecoPessoa.setCep(pessoa.getEndereco().getCep());
+		enderecoPessoa.setCidade(pessoa.getEndereco().getCidade());
+		enderecoPessoa.setUf(pessoa.getEndereco().getUf());
 
-	    novaPessoa.setEndereco(enderecoPessoa);
+		novaPessoa.setEndereco(enderecoPessoa);
 
-	    List<ContatoDTO> listaDTO = pessoa.getContatos();
-	    
-	    repository.save(novaPessoa);
+		List<ContatoDTO> listaDTO = pessoa.getContatos();
 
-	    List<Contato> novaListaContato = listaDTO.stream()
-	        .map(contatoDTO -> {
-	            Contato novoContato = new Contato();
-	            novoContato.setContato(contatoDTO.getContato());
-	            novoContato.setTipoContato(contatoDTO.getTipoContato());
-	            novoContato.setPessoa(novaPessoa);
-	            return novoContato;
-	        })
-	        .collect(Collectors.toList());
+		repository.save(novaPessoa);
 
-	    contatoRepository.saveAll(novaListaContato);
+		List<Contato> novaListaContato = listaDTO.stream().map(contatoDTO -> {
+			Contato novoContato = new Contato();
+			novoContato.setContato(contatoDTO.getContato());
+			novoContato.setTipoContato(contatoDTO.getTipoContato());
+			novoContato.setPessoa(novaPessoa);
+			return novoContato;
+		}).collect(Collectors.toList());
+
+		contatoRepository.saveAll(novaListaContato);
 	}
-
 
 	@Override
 	public PessoaDTO buscarPorId(Long id) throws Exception {
 		Optional<Pessoa> pessoa = repository.findById(id);
-		if(pessoa.isEmpty()) {
+		if (pessoa.isEmpty()) {
 			throw new Exception("Usuário não encontrado");
 		}
 		PessoaDTO retornoPessoa = PessoaDTO.fromEntity(pessoa.get());
-		
+
 		return retornoPessoa;
 	}
 
@@ -78,11 +74,11 @@ public class PessoaServiceImpl implements PessoaService {
 	@Override
 	public void atualizar(Long id, PessoaDTO pessoa) throws Exception {
 		Optional<Pessoa> pessoaModelo = repository.findById(id);
-		if(pessoaModelo.isEmpty()) {
+		if (pessoaModelo.isEmpty()) {
 			throw new Exception("Usuário não encontrado");
 		}
 		Pessoa novaPessoa = pessoaModelo.get();
-		
+
 		novaPessoa.setNome(pessoa.getNome());
 		novaPessoa.setIdade(pessoa.getIdade());
 		novaPessoa.setCpf(pessoa.getCpf());
@@ -94,13 +90,13 @@ public class PessoaServiceImpl implements PessoaService {
 		novaPessoa.setEndereco(enderecoPessoa);
 
 		repository.save(novaPessoa);
-		
+
 	}
 
 	@Override
 	public void apagar(Long id) throws Exception {
 		Optional<Pessoa> pessoaModelo = repository.findById(id);
-		if(pessoaModelo.isEmpty()) {
+		if (pessoaModelo.isEmpty()) {
 			throw new Exception("Usuário não encontrado");
 		}
 		Pessoa pessoa = pessoaModelo.get();

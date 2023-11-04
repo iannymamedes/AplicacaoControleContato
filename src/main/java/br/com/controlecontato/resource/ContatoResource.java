@@ -40,17 +40,14 @@ public class ContatoResource {
 	ContatoService contatoService;
 
 	@ApiResponses(value = {
-			  
-			  @ApiResponse(responseCode = "200", description = "Ação bem-sucedida",
-			  content = {
-			  
-			  @Content(mediaType = "application/json", schema = @Schema(implementation =
-			  ContatoDTO.class)) }),
-			  
-			  @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-			  })
+
+			@ApiResponse(responseCode = "200", description = "Ação bem-sucedida", content = {
+
+					@Content(mediaType = "application/json", schema = @Schema(implementation = ContatoDTO.class)) }),
+
+			@ApiResponse(responseCode = "500", description = "Erro interno no servidor") })
 	@Operation(summary = "Método responsável por retornar uma lista de contatos")
-	@GetMapping	 
+	@GetMapping
 	public ResponseEntity<List<ContatoDTO>> listarContatos() {
 		List<ContatoDTO> contatos = contatoService.buscarTodos();
 		if (contatos == null) {
@@ -58,19 +55,16 @@ public class ContatoResource {
 		}
 		return ResponseEntity.ok(contatos);
 	}
-	
+
 	@ApiResponses(value = {
-			  
-			  @ApiResponse(responseCode = "200", description = "Ação bem-sucedida",
-			  content = {
-			  
-			  @Content(mediaType = "application/json", schema = @Schema(implementation =
-			  ContatoDTO.class)) }),
-			  
-			  @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-			  })
+
+			@ApiResponse(responseCode = "200", description = "Ação bem-sucedida", content = {
+
+					@Content(mediaType = "application/json", schema = @Schema(implementation = ContatoDTO.class)) }),
+
+			@ApiResponse(responseCode = "500", description = "Erro interno no servidor") })
 	@Operation(summary = "Método responsável por encontrar um contato")
-	@GetMapping("/{id}")	
+	@GetMapping("/{id}")
 	public ResponseEntity<ContatoDTO> buscarPorId(@PathVariable Long id) throws Exception {
 		try {
 			ContatoDTO contato = contatoService.buscarPorId(id);
@@ -90,7 +84,6 @@ public class ContatoResource {
 			throw new Exception(e.getMessage());
 		}
 	}
-
 
 	@Operation(summary = "Método responsável por atualizar um contato")
 	@PutMapping("/{id}")
