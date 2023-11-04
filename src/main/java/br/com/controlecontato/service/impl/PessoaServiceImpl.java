@@ -3,6 +3,7 @@ package br.com.controlecontato.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,46 +25,36 @@ public class PessoaServiceImpl implements PessoaService {
 	ContatoRepository contatoRepository;
 
 
-	@Service
-	public class PessoaService {
+	public void salvar(PessoaDTO pessoa) {
+		Pessoa novaPessoa = new Pessoa();
+	    novaPessoa.setNome(pessoa.getNome());
+	    novaPessoa.setIdade(pessoa.getIdade());
+	    novaPessoa.setCpf(pessoa.getCpf());
 
-	    @Autowired
-	    private PessoaRepository pessoaRepository;
+	    Endereco enderecoPessoa = new Endereco();
+	    enderecoPessoa.setEndereco(pessoa.getEndereco().getEndereco());
+	    enderecoPessoa.setCep(pessoa.getEndereco().getCep());
+	    enderecoPessoa.setCidade(pessoa.getEndereco().getCidade());
+	    enderecoPessoa.setUf(pessoa.getEndereco().getUf());
 
-	    @Autowired
-	    private ContatoRepository contatoRepository;
+	    novaPessoa.setEndereco(enderecoPessoa);
 
-	    public void salvar(PessoaDTO pessoa) {
-	        Pessoa novaPessoa = new Pessoa();
-	        novaPessoa.setNome(pessoa.getNome());
-	        novaPessoa.setIdade(pessoa.getIdade());
-	        novaPessoa.setCpf(pessoa.getCpf());
+	    List<ContatoDTO> listaDTO = pessoa.getContatos();
+	    
+	    repository.save(novaPessoa);
 
-	        Endereco enderecoPessoa = new Endereco();
-	        enderecoPessoa.setEndereco(pessoa.getEndereco().getEndereco());
-	        enderecoPessoa.setCep(pessoa.getEndereco().getCep());
-	        enderecoPessoa.setCidade(pessoa.getEndereco().getCidade());
-	        enderecoPessoa.setUf(pessoa.getEndereco().getUf());
-	        novaPessoa.setEndereco(enderecoPessoa);
-
-	        List<ContatoDTO> listaDTO = pessoa.getContatos();
-	        List<Contato> novaListaContato = new ArrayList<>();
-
-	        for (ContatoDTO contato : listaDTO) {
+	    List<Contato> novaListaContato = listaDTO.stream()
+	        .map(contatoDTO -> {
 	            Contato novoContato = new Contato();
-	            novoContato.setContato(contato.getContato());
-	            novoContato.setTipoContato(contato.getTipoContato());
-	            novoContato.setPessoa(novaPessoa); 
-	            novaListaContato.add(novoContato);
-	        }
+	            novoContato.setContato(contatoDTO.getContato());
+	            novoContato.setTipoContato(contatoDTO.getTipoContato());
+	            novoContato.setPessoa(novaPessoa);
+	            return novoContato;
+	        })
+	        .collect(Collectors.toList());
 
-	        novaPessoa.setContatos(novaListaContato);
-
-	        pessoaRepository.save(novaPessoa);
-	        contatoRepository.saveAll(novaListaContato);
-	    }
+	    contatoRepository.saveAll(novaListaContato);
 	}
-
 
 
 	@Override
@@ -85,36 +76,26 @@ public class PessoaServiceImpl implements PessoaService {
 	}
 
 	@Override
-	public void salvar(PessoaDTO pessoa) {
+	public void atualizar(Long id, PessoaDTO pessoa) throws Exception {
+		Optional<Pessoa> pessoaModelo = repository.findById(id);
+		if(pessoaModelo.isEmpty()) {
+			throw new Exception("Usuário não encontrado");
+		}
+		Pessoa novaPessoa = pessoaModelo.get();
 		
-	    Pessoa novaPessoa = new Pessoa();
-	    novaPessoa.setNome(pessoa.getNome());
-	    novaPessoa.setIdade(pessoa.getIdade());
-	    novaPessoa.setCpf(pessoa.getCpf());
+		novaPessoa.setNome(pessoa.getNome());
+		novaPessoa.setIdade(pessoa.getIdade());
+		novaPessoa.setCpf(pessoa.getCpf());
+		Endereco enderecoPessoa = new Endereco();
+		enderecoPessoa.setEndereco(pessoa.getEndereco().getEndereco());
+		enderecoPessoa.setCep(pessoa.getEndereco().getCep());
+		enderecoPessoa.setCidade(pessoa.getEndereco().getCidade());
+		enderecoPessoa.setUf(pessoa.getEndereco().getUf());
+		novaPessoa.setEndereco(enderecoPessoa);
 
-	    Endereco enderecoPessoa = new Endereco();
-	    enderecoPessoa.setEndereco(pessoa.getEndereco().getEndereco());
-	    enderecoPessoa.setCep(pessoa.getEndereco().getCep());
-	    enderecoPessoa.setCidade(pessoa.getEndereco().getCidade());
-	    enderecoPessoa.setUf(pessoa.getEndereco().getUf());
-	    novaPessoa.setEndereco(enderecoPessoa);
-	    
-	    List<ContatoDTO> listaDTO = pessoa.getContatos();
-	    List<Contato> novaListaContato = new ArrayList<>();
-
-	    for (ContatoDTO contato : listaDTO) {
-	        Contato novoContato = new Contato();
-	        novoContato.setContato(contato.getContato());
-	        novoContato.setTipoContato(contato.getTipoContato());
-	        novoContato.setPessoa(novaPessoa); 
-	        novaListaContato.add(novoContato);
-	    }
-
-	    novaPessoa.setContatos(novaListaContato);
-
-	    repository.save(novaPessoa);
+		repository.save(novaPessoa);
+		
 	}
-
 
 	@Override
 	public void apagar(Long id) throws Exception {
@@ -125,12 +106,5 @@ public class PessoaServiceImpl implements PessoaService {
 		Pessoa pessoa = pessoaModelo.get();
 		pessoa.setSituacao(0);
 		repository.save(pessoa);
-	}
-
-
-	@Override
-	public void atualizar(Long id, PessoaDTO pessoa) throws Exception {
-		// TODO Auto-generated method stub
-		
 	}
 }

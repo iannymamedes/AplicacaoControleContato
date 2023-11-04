@@ -23,6 +23,7 @@ import br.com.controlecontato.service.ContatoService;
 import br.com.controlecontato.service.PessoaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -31,24 +32,24 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/contato")
 @Tag(name = "API Contatos", description = "Aplicação completa com a possibilidade de busca por id, obter uma lista de todos os contatos, criar registro, apagar registro e atualizar registro de contatos")
-
-@ApiResponses(value = {
-		  
-		  @ApiResponse(responseCode = "200", description = "Ação bem-sucedida",
-		  content = {
-		  
-		  @Content(mediaType = "application/json", schema = @Schema(implementation =
-		  ContatoDTO.class)) }),
-		  
-		  @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-		  })
+@RequestMapping("/contato")
 public class ContatoResource {
 
 	@Autowired
 	ContatoService contatoService;
 
+	@ApiResponses(value = {
+			  
+			  @ApiResponse(responseCode = "200", description = "Ação bem-sucedida",
+			  content = {
+			  
+			  @Content(mediaType = "application/json", schema = @Schema(implementation =
+			  ContatoDTO.class)) }),
+			  
+			  @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+			  })
+	@Operation(summary = "Método responsável por retornar uma lista de contatos")
 	@GetMapping	 
 	public ResponseEntity<List<ContatoDTO>> listarContatos() {
 		List<ContatoDTO> contatos = contatoService.buscarTodos();
@@ -57,8 +58,19 @@ public class ContatoResource {
 		}
 		return ResponseEntity.ok(contatos);
 	}
-
-	@GetMapping("/{id}")
+	
+	@ApiResponses(value = {
+			  
+			  @ApiResponse(responseCode = "200", description = "Ação bem-sucedida",
+			  content = {
+			  
+			  @Content(mediaType = "application/json", schema = @Schema(implementation =
+			  ContatoDTO.class)) }),
+			  
+			  @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+			  })
+	@Operation(summary = "Método responsável por encontrar um contato")
+	@GetMapping("/{id}")	
 	public ResponseEntity<ContatoDTO> buscarPorId(@PathVariable Long id) throws Exception {
 		try {
 			ContatoDTO contato = contatoService.buscarPorId(id);
@@ -68,6 +80,7 @@ public class ContatoResource {
 		}
 	}
 
+	@Operation(summary = "Método responsável por cadastrar um contato")
 	@PostMapping
 	public ResponseEntity<Contato> salvar(@RequestBody ContatoDTO contato) throws Exception {
 		try {
@@ -78,6 +91,8 @@ public class ContatoResource {
 		}
 	}
 
+
+	@Operation(summary = "Método responsável por atualizar um contato")
 	@PutMapping("/{id}")
 	public ResponseEntity<Contato> atualizar(@PathVariable Long id, @RequestBody Contato contato) throws Exception {
 		try {
@@ -89,6 +104,7 @@ public class ContatoResource {
 		}
 	}
 
+	@Operation(summary = "Método responsável por escluir um contato")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deletar(@PathVariable Long id) throws Exception {
 		try {
