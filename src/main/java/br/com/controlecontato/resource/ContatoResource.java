@@ -50,8 +50,7 @@ public class ContatoResource {
 	ContatoService contatoService;
 
 	@GetMapping
-	
-	  
+	@ApiOperation("Lista todos os contatos salvos")
 	 
 	public ResponseEntity<List<ContatoDTO>> listarContatos() {
 		List<ContatoDTO> contatos = contatoService.buscarTodos();
@@ -62,8 +61,7 @@ public class ContatoResource {
 	}
 
 	@GetMapping("/{id}")
-	
-	  
+	@ApiOperation("Recupera um contato buscando pelo id")
 	public ResponseEntity<ContatoDTO> buscarPorId(@PathVariable Long id) throws Exception {
 		try {
 			ContatoDTO contato = contatoService.buscarPorId(id);
@@ -77,7 +75,6 @@ public class ContatoResource {
 	public ResponseEntity<Contato> salvar(@RequestBody ContatoDTO contato) throws Exception {
 		try {
 			contatoService.salvar(contato);
-
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
