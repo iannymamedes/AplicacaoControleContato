@@ -39,6 +39,7 @@ Para contruir o projeto com o SpringBoot, serão necessários as dependências d
    #### javax.servlet-api
    #### springdoc-openapi-starter-webmvc-ui
    #### springfox-boot-starter
+   #### spring-boot-starter-security
 
 ## Features
 O projeto pode ser usado como modelo para iniciar o desenvolvimento de um Agenda usando o Java.
