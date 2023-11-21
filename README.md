@@ -16,6 +16,9 @@ O acesso será feito através de login de usuário e administrador com senhas.
 #### 123456
 Esceto para visualizar os endpointers pessoa e contato
 
+#### Acesso ao Swagger:
+http://localhost:8080/swagger-ui/index.html
+
 ## Desenvolvimento
 
 Para iniciar o desenvolvimento, é necessário clonar o projeto do GitHub num diretório de sua preferência:
